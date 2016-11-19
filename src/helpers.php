@@ -309,3 +309,23 @@ if (! function_exists('isIntVal'))
         return (string)(int)$number == $number;
     }
 }
+
+
+if(! function_exists('castObject'))
+{
+    /**
+     * @param $instance
+     * @param $className
+     * @return mixed
+     */
+    function castObject($instance, $className)
+    {
+        return unserialize(sprintf(
+            'O:%d:"%s"%s',
+            strlen($className),
+            $className,
+            strstr(strstr(serialize($instance), '"'), ':')
+        ));
+    }
+
+}

@@ -132,4 +132,20 @@ trait ObjectBuilder
 
         return new \ArrayIterator($result);
     }
+
+
+    /**
+     * @param $className
+     * @return mixed
+     */
+    public function castTo($className)
+    {
+        return unserialize(sprintf(
+            'O:%d:"%s"%s',
+            strlen($className),
+            $className,
+            strstr(strstr(serialize($this), '"'), ':')
+        ));
+    }
+
 }
