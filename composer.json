@@ -14,7 +14,10 @@
   "autoload": {
     "psr-4": {
       "mhndev\\phpStd\\": "src"
-    }
+    },
+    "files" : [
+      "src/helpers.php"
+    ]
   },
   "require": {
     "php": ">=5.4.0"
