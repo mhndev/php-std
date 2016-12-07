@@ -20,6 +20,15 @@ trait ObjectBuilder
         $this->$name = $value;
     }
 
+
+    /**
+     * @param $name
+     */
+    function __unset($name)
+    {
+        unset($this->$name);
+    }
+
     /**
      * @param array $options
      * @return static
