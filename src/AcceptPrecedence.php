@@ -11,29 +11,12 @@ use UnexpectedValueException;
 class AcceptPrecedence
 {
 
-
-    /**
-     * @var array
-     */
-    private static $precedence;
-
-
-    /**
-     * @var array
-     */
-    private static $possibleMedias;
-
-
     /**
      * @param string $mediaRanges
      * @return array
      */
     public static function precedence($mediaRanges)
     {
-        if(!empty(self::$precedence)){
-            return self::$precedence;
-        }
-
         $result = [];
         $mediaRangesInArray = explode(',', $mediaRanges);
 
@@ -49,50 +32,26 @@ class AcceptPrecedence
 
         uasort($result, ['self', 'cmp']);
 
-        return self::$precedence = array_values($result);
+        return array_values($result);
     }
-
-    /**
-     * @param string $mediaRanges
-     * @return bool
-     */
-    public static function isAnyTypeAcceptable($mediaRanges)
-    {
-        if(empty(self::$possibleMedias)){
-            self::possibleMedias($mediaRanges);
-        }
-
-        if(in_array('*/*', self::$possibleMedias)){
-            return true;
-        }
-
-        return false;
-    }
-
 
     /**
      * @param string $mediaRanges
      * @return array
      */
-    public static function possibleMedias($mediaRanges)
+    public static function possibleValues($mediaRanges)
     {
-        if(!empty(self::$possibleMedias)){
-            return self::$possibleMedias;
-        }
-
         $result = [];
+        $precedence = self::precedence($mediaRanges);
 
-        if(empty(self::$precedence)){
-            self::precedence($mediaRanges);
-        }
-
-        foreach (self::$precedence as $item){
+        foreach ($precedence as $item){
             $result[] = $item['type'].'/'.$item['subtype'];
         }
 
-
-        return self::$possibleMedias = $result;
+        return $result;
     }
+
+
 
 
     /**
