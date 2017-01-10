@@ -7,10 +7,10 @@ use mhndev\phpStd\Exceptions\InvalidArgumentException;
 use mhndev\phpStd\Exceptions\RunTimeException;
 
 /**
- * Class mixinTrait
+ * Class MixinTrait
  * @package mhndev\phpStd
  */
-trait mixinTrait
+trait MixinTrait
 {
     /**
      * @var array

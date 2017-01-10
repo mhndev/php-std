@@ -15,7 +15,7 @@ class AcceptPrecedence
      * @param string $mediaRanges
      * @return array
      */
-    public static function precedence($mediaRanges)
+    public static function precedenceMedia($mediaRanges)
     {
         $result = [];
         $mediaRangesInArray = explode(',', $mediaRanges);
@@ -28,6 +28,26 @@ class AcceptPrecedence
                 'subtype' => $mediaRangeParsed[1],
                 'q' => array_key_exists('q',$mediaRangeParsed[2]) ? $mediaRangeParsed[2]['q'] : 1
             ];
+
+
+        }
+
+        uasort($result, ['self', 'cmp']);
+        return array_values($result);
+    }
+
+
+    /**
+     * @param string $languageRanges
+     * @return array
+     */
+    public static function precedenceLanguage($languageRanges)
+    {
+        $result = [];
+        $languageRangesInArray = explode(',', $languageRanges);
+
+        foreach ($languageRangesInArray as $languageRange){
+            $result[] = self::parseLanguageRange($languageRange);
         }
 
         uasort($result, ['self', 'cmp']);
@@ -42,7 +62,7 @@ class AcceptPrecedence
     public static function possibleValues($mediaRanges)
     {
         $result = [];
-        $precedence = self::precedence($mediaRanges);
+        $precedence = self::precedenceMedia($mediaRanges);
 
         foreach ($precedence as $item){
             $result[] = $item['type'].'/'.$item['subtype'];
@@ -61,6 +81,19 @@ class AcceptPrecedence
      */
     private static function cmp($a, $b)
     {
+        if(!array_key_exists('q', $a) && !array_key_exists('q', $a)){
+            return 0;
+        }
+
+        if(!array_key_exists('q', $a) && array_key_exists('q', $a)){
+            return -1;
+        }
+
+        if(array_key_exists('q', $a) && !array_key_exists('q', $a)){
+            return 1;
+        }
+
+
         if ($a['q'] == $b['q']) {
             return 0;
         }
@@ -111,6 +144,7 @@ class AcceptPrecedence
 
         list($type, $subtype) = explode('/', $fullType);
 
+
         if (!$subtype) {
             throw new \UnexpectedValueException('Malformed media-range: ' . $mediaRange);
         }
@@ -123,6 +157,37 @@ class AcceptPrecedence
         }
 
         return array(trim($type), trim($subtype), $params, $genericSubtype);
+    }
+
+
+    /**
+     * @param $languageRange
+     * @return array
+     */
+    public static function parseLanguageRange($languageRange)
+    {
+        $parts = explode(';', $languageRange);
+
+        $params = array();
+        foreach ($parts as $i => $param) {
+            if (strpos($param, '=') !== false) {
+                list($k, $v) = explode('=', trim($param));
+                $params[$k] = $v;
+            }
+        }
+
+        $fullType = trim($parts[0]);
+
+
+        // Java URLConnection class sends an Accept header that includes a
+        // single "*". Turn it into a legal wildcard.
+        if ($fullType == '*') {
+            $fullType = '*/*';
+        }
+
+        $results = explode('-', $fullType);
+
+        return ['language' => $results[0], 'country' => array_key_exists(1, $results) ? $results[1] : null];
     }
 
 
