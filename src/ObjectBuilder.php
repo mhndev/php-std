@@ -38,7 +38,12 @@ trait ObjectBuilder
         $instance = new static();
 
         foreach ($options as $key => $value){
-            $instance->$key = $value;
+
+            if(method_exists($instance, $method = 'set'.ucfirst($key) )){
+                $instance->{$method}($value);
+            }else{
+                $instance->$key = $value;
+            }
         }
 
         return $instance;

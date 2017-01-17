@@ -329,3 +329,39 @@ if(! function_exists('castObject'))
     }
 
 }
+
+if(! function_exists('iterate_to_array_recursive'))
+{
+    /**
+     * @param $instance
+     * @return mixed
+     */
+    function iterate_to_array_recursive($instance)
+    {
+        $newResult = [];
+
+        $result = iterator_to_array($instance);
+
+        foreach ($result as $key => $value){
+
+            if(is_object($value) && $value instanceof Traversable){
+                $newResult[$key] = iterator_to_array($value);
+            }
+
+            elseif (is_object($value) && $value instanceof \MongoDB\BSON\ObjectID){
+                $newResult[$key] = (string) $value;
+            }
+
+            elseif ($key == '__pclass'){
+                continue;
+            }
+
+            else{
+                $newResult[$key] = $value;
+            }
+        }
+
+        return $newResult;
+    }
+
+}
