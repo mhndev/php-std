@@ -106,6 +106,25 @@ if (! function_exists('class_uses_recursive')) {
 }
 
 
+if(!function_exists('render_html'))
+{
+    /**
+     * @param $path
+     * @return string
+     */
+    function render_html($path)
+    {
+        ob_start();
+        include($path);
+        $var=ob_get_contents();
+        ob_end_clean();
+        return $var;
+    }
+}
+
+
+
+
 if (! function_exists('trait_uses_recursive')) {
     /**
      * Returns all traits used by a trait and its traits.
