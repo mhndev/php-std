@@ -110,10 +110,15 @@ if(!function_exists('render_html'))
 {
     /**
      * @param $path
+     * @param array $args
      * @return string
      */
-    function render_html($path)
+    function render_html($path,array $args = [])
     {
+        if(!empty($args)){
+            extract($args, EXTR_OVERWRITE);
+        }
+
         ob_start();
         include($path);
         $var=ob_get_contents();
