@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<phpunit bootstrap="./vendor/autoload.php" colors="true">
+    <testsuite name="php standard library test suite">
+        <directory>./tests</directory>
+    </testsuite>
+
+</phpunit>
