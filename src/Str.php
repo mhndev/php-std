@@ -61,6 +61,17 @@ class Str
         return static::$camelCache[$value] = lcfirst(static::studly($value));
     }
 
+
+    /**
+     * @param $string
+     * @return bool
+     */
+    public static function isJson($string)
+    {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+
     /**
      * Determine if a given string contains a given substring.
      *
