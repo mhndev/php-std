@@ -2,6 +2,8 @@
 
 namespace mhndev\phpStd;
 
+use mhndev\phpStd\Exceptions\InvalidArgumentException;
+
 /**
  * Class Str
  * @package mhndev\phpStd
@@ -59,6 +61,24 @@ class Str
         }
 
         return static::$camelCache[$value] = lcfirst(static::studly($value));
+    }
+
+
+    /**
+     * @param $string
+     * @param bool $throwException
+     * @return bool
+     */
+    public static function isJson($string, $throwException = true)
+    {
+        if($throwException && ! is_string($string)){
+            throw new InvalidArgumentException(sprintf('String Type Expected given : %s', gettype($string)));
+        }elseif (! is_string($string)){
+            return false;
+        }
+
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
     }
 
     /**
@@ -193,7 +213,7 @@ class Str
     }
 
     /**
-     * Parse a Class@method style callback into class and method.
+     * Parse a Class@method  callback into class and method.
      *
      * @param  string  $callback
      * @param  string  $default
@@ -216,25 +236,57 @@ class Str
         return Pluralizer::plural($value, $count);
     }
 
+//    /**
+//     * Generate a more truly "random" alpha-numeric string.
+//     *
+//     * @param  int  $length
+//     * @return string
+//     */
+//    public static function random($length = 16)
+//    {
+//        $string = '';
+//
+//        while (($len = static::length($string)) < $length) {
+//            $size = $length - $len;
+//
+//            $bytes = random_bytes($size);
+//
+//            $string .= static::substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
+//        }
+//
+//        return $string;
+//    }
+
+
     /**
-     * Generate a more truly "random" alpha-numeric string.
-     *
-     * @param  int  $length
+     * @param string $valid_chars
+     * @param integer $length
      * @return string
      */
-    public static function random($length = 16)
+    public static function random($valid_chars, $length = 16)
     {
-        $string = '';
+        // start with an empty random string
+        $random_string = "";
 
-        while (($len = static::length($string)) < $length) {
-            $size = $length - $len;
+        // count the number of chars in the valid chars string so we know how many choices we have
+        $num_valid_chars = strlen($valid_chars);
 
-            $bytes = random_bytes($size);
+        // repeat the steps until we've created a string of the right length
+        for ($i = 0; $i < $length; $i++)
+        {
+            // pick a random number from 1 up to the number of valid chars
+            $random_pick = mt_rand(1, $num_valid_chars);
 
-            $string .= static::substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
+            // take the random character out of the string of valid chars
+            // subtract 1 from $random_pick because strings are indexed starting at 0, and we started picking at 1
+            $random_char = $valid_chars[$random_pick-1];
+
+            // add the randomly-chosen char onto the end of our string so far
+            $random_string .= $random_char;
         }
 
-        return $string;
+        // return our finished random string
+        return $random_string;
     }
 
     /**

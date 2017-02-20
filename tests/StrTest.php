@@ -31,4 +31,37 @@ class StrTest extends TestCase
         $this->assertTrue(Str::endsWith($str, $end));
     }
 
+    function testIsJson()
+    {
+        $sampleArray = ['name' => 'majid', 'family' => 'abdolhosseini', 'age' => 25];
+
+        $jsonRepresentation = json_encode($sampleArray);
+
+        $condition = Str::isJson($jsonRepresentation) &&
+            ! Str::isJson('sampleString') &&
+            ! Str::isJson($sampleArray, false) &&
+            ! Str::isJson(new \stdClass(), false);
+
+
+        $this->assertTrue($condition);
+    }
+
+
+    function testCamel()
+    {
+        $sampleString = 'this_is_sample text';
+
+        $this->assertTrue(Str::camel($sampleString) == 'thisIsSampleText');
+    }
+
+
+    function testRandom()
+    {
+        $randomString = Str::random('xyz123', 100);
+
+        $this->assertTrue(!strpos($randomString, 'a') && mb_strlen($randomString) == 100);
+    }
+
+
+
 }
