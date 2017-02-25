@@ -368,6 +368,29 @@ if(! function_exists('castObject'))
 
 }
 
+
+if(! function_exists('base64_to_file'))
+{
+    /**
+     * @param $base64_string
+     * @param $output_file
+     * @return mixed
+     */
+    function base64_to_file($base64_string, $output_file) {
+        $ifp = fopen($output_file, "wb");
+
+        $data = explode(',', $base64_string);
+
+        fwrite($ifp, base64_decode($data[1]));
+        fclose($ifp);
+
+        return $output_file;
+    }
+}
+
+
+
+
 if(! function_exists('iterate_to_array_recursive'))
 {
     /**
