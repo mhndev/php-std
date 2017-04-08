@@ -20,12 +20,21 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
 
 
     /**
+     * @var boolean
+     */
+    protected $removeDeletedIndex;
+
+
+    /**
      * Collection constructor.
      * @param array $items
+     * @param bool $removeDeletedIndex
      */
-    public function __construct($items = [])
+    public function __construct($items = [], $removeDeletedIndex = true)
     {
         $this->items = $this->getArrayableItems($items);
+
+        $this->removeDeletedIndex = $removeDeletedIndex;
     }
 
     /**
@@ -44,16 +53,23 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
      */
     public function first()
     {
-        return array_shift(array_values($this->items));
+        $values = array_values($this->items);
+
+        return array_shift($values);
     }
 
     /**
      * @param $object
+     * @param null $key
      * @return $this
      */
-    function add($object)
+    function add($object, $key = null)
     {
-        $this->items[] = $object;
+        if($key == null){
+            $this->items[] = $object;
+        }else{
+            $this->items[$key] = $object;
+        }
 
         return $this;
     }
@@ -64,13 +80,17 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
      */
     function del($key)
     {
-        if (isset($this->items[$key])) {
-            unset($this->items[$key]);
-    }
-        else {
+        if (!isset($this->items[$key])) {
             throw new CollectionInvalidKeyException(sprintf(
-                "Invalid key %s$.", $key
+                "Invalid key : %s .", $key
             ));
+        }
+
+        if($this->removeDeletedIndex){
+            array_splice($this->items, $key, 1);
+        }
+        else{
+            unset($this->items[$key]);
         }
     }
 
@@ -82,7 +102,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
     function delByValue($object)
     {
         if(($key = array_search($object, $this->items, true)) !== FALSE) {
-            unset($this->items[$key]);
+            $this->del($key);
         }
         else{
             throw new CollectionInvalidValueException();
@@ -113,7 +133,9 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
      */
     function merge($items)
     {
-        return new static(array_merge($this->items, $this->getArrayableItems($items)));
+        $arrayable = $this->getArrayableItems($items);
+
+        return new static(array_merge($this->items, $arrayable));
     }
 
 
