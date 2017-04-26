@@ -6,7 +6,6 @@
  */
 namespace mhndev\phpStd\Tests;
 
-use ArrayAccess;
 use mhndev\phpStd\Arr;
 use PHPUnit\Framework\TestCase;
 
