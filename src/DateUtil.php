@@ -21,6 +21,10 @@ class DateUtil
             return $time;
         }
 
+        if(is_string($time)){
+            return DateTime::createFromFormat('Y-m-d H:i:s', trim($time));
+        }
+
         if ($time instanceof UTCDateTime){
             return $time->toDateTime();
         }
@@ -63,11 +67,17 @@ class DateUtil
 
             return new UTCDateTime($time);
         }
-        if (is_string($time)) {
-            $unixTime = (int) preg_replace('/\D+/', '', $time);
-            $unixTime *= 1000;
 
-            return new UTCDateTime($unixTime);
+
+        if (isIntVal($time)) {
+            $time *= 1000;
+
+            return new UTCDateTime($time);
+        }
+
+
+        if(is_string($time)){
+            new UTCDateTime(static::toDateTime($time)->getTimestamp() * 1000);
         }
 
 
