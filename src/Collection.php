@@ -251,4 +251,24 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
     {
         return count($this->items);
     }
+
+
+    public function toArray()
+    {
+        $ar = [];
+
+        foreach ($this->items as $item){
+
+            if(! method_exists($item, 'toArray')){
+                throw new \Exception('item class has not method toArray');
+            }
+            else{
+                $ar[] = $item->toArray();
+            }
+
+        }
+
+        return $ar;
+    }
+
 }
