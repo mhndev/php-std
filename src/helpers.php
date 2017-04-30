@@ -401,12 +401,16 @@ if(! function_exists('iterate_to_array_recursive'))
     {
         $newResult = [];
 
-        $result = iterator_to_array($instance);
+        $result = $instance;
+
+        if($instance instanceof Traversable){
+            $result = iterator_to_array($instance);
+        }
 
         foreach ($result as $key => $value){
 
             if(is_object($value) && $value instanceof Traversable){
-                $newResult[$key] = iterator_to_array($value);
+                $newResult[$key] = iterate_to_array_recursive($value);
             }
 
             elseif (is_object($value) && $value instanceof \MongoDB\BSON\ObjectID){
