@@ -18,23 +18,13 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
      */
     protected $items;
 
-
-    /**
-     * @var boolean
-     */
-    protected $removeDeletedIndex;
-
-
     /**
      * Collection constructor.
      * @param array $items
-     * @param bool $removeDeletedIndex
      */
-    public function __construct($items = [], $removeDeletedIndex = true)
+    public function __construct($items = [])
     {
         $this->items = $this->getArrayableItems($items);
-
-        $this->removeDeletedIndex = $removeDeletedIndex;
     }
 
     /**
@@ -53,9 +43,42 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
      */
     public function first()
     {
-        $values = array_values($this->items);
+        return $this->nth(0);
+    }
 
-        return array_shift($values);
+    /**
+     * @return mixed
+     */
+    public function last()
+    {
+        return $this->nth($this->count() - 1);
+    }
+
+
+    /**
+     * @param $n
+     * @return array
+     */
+    public function nth($n)
+    {
+        return array_slice($this->items, $n, 1);
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function second()
+    {
+        return $this->nth(1);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function third()
+    {
+        return $this->nth(2);
     }
 
     /**
@@ -86,12 +109,8 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
             ));
         }
 
-        if($this->removeDeletedIndex){
-            array_splice($this->items, $key, 1);
-        }
-        else{
-            unset($this->items[$key]);
-        }
+        array_splice($this->items, $key, 1);
+
     }
 
 
