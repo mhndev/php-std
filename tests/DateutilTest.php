@@ -6,6 +6,9 @@
  */
 namespace mhndev\phpStd\Tests;
 
+use DateTime;
+use mhndev\phpStd\DateUtil;
+use MongoDB\BSON\UTCDateTime;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,15 +17,38 @@ use PHPUnit\Framework\TestCase;
  */
 class DateUtilTest extends TestCase
 {
-    function testToDateTime()
-    {
 
+
+    function testTimestampToDateTime()
+    {
+        $dateTime = new DateTime();
+        $timestamp  = $dateTime->getTimestamp();
+
+        $result = DateUtil::toDateTime($timestamp);
+
+        $this->assertInstanceOf(DateTime::class, $result);
+        $this->assertEquals($timestamp, $result->getTimestamp());
     }
 
 
-    function testToIsoDate()
+    function testNullToDateTime()
     {
+        $date = DateUtil::toDateTime(null);
 
+        $this->assertInstanceOf(DateTime::class, $date);
+    }
+
+
+
+
+    function testDateTimeToIsoDate()
+    {
+        $dateTime = new DateTime();
+
+        $result = DateUtil::toIsoDate($dateTime);
+
+        $this->assertInstanceOf(UTCDateTime::class, $result);
+        $this->assertEquals($result->toDateTime()->getTimestamp(), $dateTime->getTimestamp());
     }
 
 }

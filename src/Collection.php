@@ -61,7 +61,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
      */
     public function nth($n)
     {
-        return array_slice($this->items, $n, 1);
+        return array_slice($this->items, $n, 1)[0];
     }
 
 
@@ -272,6 +272,10 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     public function toArray()
     {
         $ar = [];

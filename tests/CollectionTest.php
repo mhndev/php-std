@@ -26,6 +26,19 @@ class CollectionTest extends TestCase
         $this->assertEquals(1, $myNumbers->first());
     }
 
+
+
+    function testLast()
+    {
+        $myNumbers = new Collection();
+        $myNumbers->add(1);
+        $myNumbers->add(2);
+        $myNumbers->add(3);
+
+        $this->assertEquals(3, $myNumbers->last());
+    }
+
+
     function testDel()
     {
         $names = new Collection();
