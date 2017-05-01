@@ -26,6 +26,12 @@
     "phpunit/phpunit": "6.*",
     "mikey179/vfsStream": "1.6.*"
   },
+
+
+  "suggest":{
+    "ext-mongo": "*"
+  },
+
   "autoload-dev": {
     "psr-4": {
       "Tests\\": "tests/"

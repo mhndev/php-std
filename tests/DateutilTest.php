@@ -39,16 +39,17 @@ class DateUtilTest extends TestCase
     }
 
 
-
-
     function testDateTimeToIsoDate()
     {
-        $dateTime = new DateTime();
+        if(class_exists(UTCDateTime::class)){
+            $dateTime = new DateTime();
 
-        $result = DateUtil::toIsoDate($dateTime);
+            $result = DateUtil::toIsoDate($dateTime);
 
-        $this->assertInstanceOf(UTCDateTime::class, $result);
-        $this->assertEquals($result->toDateTime()->getTimestamp(), $dateTime->getTimestamp());
+            $this->assertInstanceOf(UTCDateTime::class, $result);
+            $this->assertEquals($result->toDateTime()->getTimestamp(), $dateTime->getTimestamp());
+        }
+
     }
 
 }
