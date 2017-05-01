@@ -2,6 +2,7 @@
 namespace mhndev\phpStd;
 
 use DateTime;
+use DateTimeZone;
 use mhndev\phpStd\Exceptions\InvalidArgumentException;
 use MongoDB\BSON\UTCDateTime;
 
@@ -15,7 +16,7 @@ class DateUtil
      * @param $time
      * @return DateTime
      */
-    public static function toDateTime($time)
+    public static function toDateTime($time = null)
     {
         if($time instanceof DateTime){
             return $time;
@@ -26,7 +27,8 @@ class DateUtil
         }
 
         if ($time instanceof UTCDateTime){
-            return $time->toDateTime();
+            $date = static::changeTimeZone($time->toDateTime());
+            return $date;
         }
 
         if(is_int($time)){
@@ -44,6 +46,16 @@ class DateUtil
             throw new InvalidArgumentException;
         }
 
+    }
+
+
+    /**
+     * @param DateTime $date
+     * @return DateTime
+     */
+    private static function changeTimeZone(DateTime $date)
+    {
+        return $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
     }
 
 
