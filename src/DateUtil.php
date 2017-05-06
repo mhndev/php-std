@@ -1,5 +1,4 @@
 <?php
-
 namespace mhndev\phpStd;
 
 use DateTime;
@@ -44,7 +43,10 @@ class DateUtil
         }
 
         if ($time instanceof \Traversable) {
-            return DateTime::createFromFormat('Y-m-d H:i:s', $time['date']);
+            if (array_key_exists('date', $time)){
+                return DateTime::createFromFormat('Y-m-d H:i:s', $time['date']);
+            }
+            return new DateTime();
         }
 
         if ($time instanceof \stdClass) {
@@ -103,4 +105,5 @@ class DateUtil
         }
 
     }
+
 }
