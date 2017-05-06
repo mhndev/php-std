@@ -1,4 +1,5 @@
 <?php
+
 namespace mhndev\phpStd;
 
 use DateTime;
@@ -18,31 +19,37 @@ class DateUtil
      */
     public static function toDateTime($time = null)
     {
-        if($time instanceof DateTime){
+        if ($time instanceof DateTime) {
             return $time;
         }
 
-        if(is_string($time)){
+        if (is_string($time)) {
             return DateTime::createFromFormat('Y-m-d H:i:s', trim($time));
         }
 
-        if ($time instanceof UTCDateTime){
+        if ($time instanceof UTCDateTime) {
             $date = static::changeTimeZone($time->toDateTime());
             return $date;
         }
 
-        if(is_int($time)){
+        if (is_int($time)) {
             $date = new DateTime();
             $date->setTimestamp($time);
 
             return $date;
         }
 
-        if(is_null($time)){
+        if (is_null($time)) {
             return new DateTime();
         }
 
-        else{
+        if ($time instanceof \Traversable) {
+            return DateTime::createFromFormat('Y-m-d H:i:s', $time['date']);
+        }
+
+        if ($time instanceof \stdClass) {
+            return DateTime::createFromFormat('Y-m-d H:i:s', get_object_vars($time)['date']);
+        } else {
             throw new InvalidArgumentException;
         }
 
@@ -63,13 +70,14 @@ class DateUtil
      * @param $time
      * @return int|UTCDateTime
      */
-    public static function toIsoDate($time)
+    public static function toIsoDate($time = null)
     {
+
         if ($time instanceof UTCDateTime) {
             return $time;
         }
 
-        if( $time instanceof DateTime){
+        if ($time instanceof DateTime) {
             return new UTCDateTime($time->getTimestamp() * 1000);
         }
 
@@ -88,12 +96,9 @@ class DateUtil
         }
 
 
-        if(is_string($time)){
+        if (is_string($time)) {
             new UTCDateTime(static::toDateTime($time)->getTimestamp() * 1000);
-        }
-
-
-        else{
+        } else {
             throw new InvalidArgumentException;
         }
 
