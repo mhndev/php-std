@@ -30,6 +30,16 @@ trait ObjectBuilder
     }
 
     /**
+     * @param array $array
+     */
+    function __unsetArray(array $array)
+    {
+        foreach ($array as $property){
+            unset($this->$property);
+        }
+    }
+
+    /**
      * @param array $options
      * @return static
      */

@@ -294,4 +294,22 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
         return $ar;
     }
 
+    public function preview()
+    {
+        $ar = [];
+
+        foreach ($this->items as $item){
+
+            if(! method_exists($item, 'preview')){
+                throw new \Exception('item class has not method preview');
+            }
+            else{
+                $ar[] = $item->preview();
+            }
+
+        }
+
+        return $ar;
+    }
+
 }
