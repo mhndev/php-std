@@ -27,6 +27,7 @@ class DateUtil
         }
 
         if ($time instanceof UTCDateTime) {
+
             $date = static::changeTimeZone($time->toDateTime());
             return $date;
         }
@@ -40,6 +41,12 @@ class DateUtil
 
         if (is_null($time)) {
             return new DateTime();
+        }
+
+        if (is_array($time)){
+            if (array_key_exists('milliseconds', $time)){
+                return static::changeTimeZone((new UTCDateTime($time['milliseconds']))->toDateTime());
+            }
         }
 
         if ($time instanceof \Traversable) {
