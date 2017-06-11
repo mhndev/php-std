@@ -1,5 +1,4 @@
 <?php
-
 namespace mhndev\phpStd;
 
 use Traversable;
@@ -35,6 +34,12 @@ trait ObjectBuilder
     function __unsetArray(array $array)
     {
         foreach ($array as $property){
+            if (Str::contains($property, '.')){
+                $array = explode('.', $property);
+                if (array_key_exists($array[1], $this->{$array[0]}) && !empty($this->{$array[0]}[$array[1]])){
+                    unset($this->{$array[0]}[$array[1]]);
+                }
+            }
             unset($this->$property);
         }
     }
