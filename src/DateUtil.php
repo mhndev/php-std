@@ -106,7 +106,7 @@ class DateUtil
 
 
         if (is_string($time)) {
-            new UTCDateTime(static::toDateTime($time)->getTimestamp() * 1000);
+            return new UTCDateTime(static::toDateTime($time)->getTimestamp() * 1000);
         } else {
             throw new InvalidArgumentException;
         }
