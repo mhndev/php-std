@@ -430,3 +430,51 @@ if(! function_exists('iterate_to_array_recursive'))
     }
 
 }
+
+
+if(! function_exists('cors'))
+{
+
+    /**
+     * @param array $valid_domains
+     * @param bool $apply_headers
+     * @return array
+     */
+    function cors(array $valid_domains = ['*'], $apply_headers = true)
+    {
+        $headers = [];
+
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+
+            if (
+                isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']) &&
+                in_array($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'], ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'])
+            ) {
+
+                $http_origin = $_SERVER['HTTP_ORIGIN'];
+
+                if (in_array($http_origin, $valid_domains)) {
+                    $headers['Access-Control-Allow-Origin'] = $http_origin;
+                }
+
+                $headers["Access-Control-Allow-Credentials"] = "true";
+                $headers["Access-Control-Allow-Headers"] = "X-Requested-With";
+                $headers["Access-Control-Allow-Headers"] = "Content-Type";
+                $headers["Access-Control-Allow-Headers"] = "Access-Control-Allow-Headers";
+                $headers["Access-Control-Allow-Headers"] = "Authorization";
+                $headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS, DELETE, PUT, PATCH";
+                $headers["Access-Control-Max-Age"] = "86400";
+
+
+                if($apply_headers) {
+                    foreach ($headers as $k => $v) {
+                        header($k . ': '. $v);
+                    }
+                }
+
+            }
+        }
+
+        return $headers;
+    }
+}
